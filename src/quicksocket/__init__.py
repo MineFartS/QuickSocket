@@ -59,7 +59,10 @@ class host:
 
     def listen(self) -> Generator[conn]:
         while True:
-            yield conn(self.s.accept()[0])
+            try:
+                yield conn(self.s.accept()[0])
+            except OSError:
+                pass
 
 def client(ip:str, port:int):
     try:
@@ -68,3 +71,4 @@ def client(ip:str, port:int):
         return conn(conn_)
     except:
         return None
+
