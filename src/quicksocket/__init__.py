@@ -1,15 +1,15 @@
 import socket as _socket, struct, dill
 from typing import Generator
 
-def socket(timeout:int=10):
+def __socket(timeout:int=10):
     s = _socket.socket(_socket.AF_INET, _socket.SOCK_STREAM)
     s.settimeout(timeout)
     return s
 
-class conn:
+class __conn:
 
     def __init__(self, conn:_socket.socket):
-        self.conn = conn
+        self.__conn = conn
 
     def send(self, data):
 
@@ -19,20 +19,20 @@ class conn:
         header = struct.pack('!I', len(data))
 
         # Send the header
-        self.conn.sendall(header)
+        self.__conn.sendall(header)
 
         # Send the actual data
-        self.conn.sendall(data)
+        self.__conn.sendall(data)
 
     def recv(self):
 
         # Unpack the length from the header
         length = struct.unpack('!I', 
-            self.conn.recv(4)
+            self.__conn.recv(4)
         )[0]
 
         # Receive the actual data based on the unpacked length
-        data = self.conn.recv(length).decode('utf-8')
+        data = self.__conn.recv(length).decode('utf-8')
 
         return dill.loads(data)
 
@@ -57,18 +57,18 @@ class host:
             self.started = False
             return
 
-    def listen(self) -> Generator[conn]:
+    def listen(self) -> Generator[__conn]:
         while True:
             try:
-                yield conn(self.s.accept()[0])
+                yield __conn(self.s.accept()[0])
             except OSError:
                 pass
 
 def client(ip:str, port:int):
     try:
-        conn_ = socket()
+        conn_ = __socket()
         conn_.connect((ip, port))
-        return conn(conn_)
+        return __conn(conn_)
     except:
         return None
 
