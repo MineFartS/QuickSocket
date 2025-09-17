@@ -57,7 +57,7 @@ class host:
             self.started = False
             return
 
-    def listen(self) -> Generator[__conn]:
+    def listen(self):
         while True:
             try:
                 yield __conn(self.s.accept()[0])
