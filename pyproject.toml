@@ -5,9 +5,9 @@ build-backend = "poetry.core.masonry.api"
 [project]
 requires-python = ">=3.13"
 name = "quicksocket"
-version = "0.0.2"
-
+version = "0.0.3"
 
 dependencies = [
-  "dill",
+  "dill"
 ]
+
