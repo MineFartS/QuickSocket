@@ -14,7 +14,7 @@ def socket(timeout:int=10):
 
 class conn:
 
-    def __init__(self, conn:__socket):
+    def __init__(self, conn:'__socket'):
         
         self.conn = conn
 
