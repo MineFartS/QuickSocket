@@ -1,14 +1,51 @@
 from typing import Generator, TYPE_CHECKING
+from socket import error as __error
 
 if TYPE_CHECKING:
     from socket import socket as __socket
 
-def socket(timeout:int=10):
+
+SocketError = __error
+
+class Proxy:
+
+    def __init__(self,
+        hostname: str,
+            port: int
+    ):
+        
+        self.hostname = hostname
+        self.port = port
+
+    def enable(self):
+        import socks, socket
+
+        socks.set_default_proxy(
+            proxy_type = socks.SOCKS5,
+            addr = self.hostname,
+            port = self.port
+        )
+
+        socket.socket = socks.socksocket
+
+    def disable(self, *_):
+        import socks
+
+        socks.set_default_proxy(None)
+
+def socket(
+    timeout: int = 10,
+    addr: str = None,
+    port: int = None
+):
     from socket import socket, AF_INET, SOCK_STREAM
 
     s = socket(AF_INET, SOCK_STREAM)
     
     s.settimeout(timeout)
+
+    if (addr != None) and (port != None):
+        s.connect((addr, port))
     
     return s
 
@@ -77,10 +114,11 @@ class host:
 
 def client(
     ip: str = '127.0.0.1',
-    port: int = 80
+    port: int = 80,
+    timeout: int = 10
 ):
     try:
-        conn_ = socket()
+        conn_ = socket(timeout=timeout)
         conn_.connect((ip, port))
         return conn(conn_)
     except:
